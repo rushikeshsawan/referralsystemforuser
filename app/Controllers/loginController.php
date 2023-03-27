@@ -290,7 +290,7 @@ class loginController extends BaseController
     {
         $loginController= new loginController();
         echo $loginController->getCommisionfor1stLevel();
-        exit;
+        // exit;
         $id = $this->session->get("user_id");
         $result = $this->db->query("WITH RECURSIVE referrals AS (
             SELECT id, referedby, 1 as level 
