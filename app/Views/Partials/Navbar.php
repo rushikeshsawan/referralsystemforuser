@@ -22,6 +22,9 @@
         <li class="nav-item">
           <a class="nav-link" href="listlevelcount">All Level Count</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="levelwisecommision">Level Wise Commision</a>
+        </li>
  
        
       </ul>

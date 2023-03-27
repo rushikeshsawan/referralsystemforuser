@@ -37,6 +37,8 @@ $routes->get('/DirectReferral','loginController::DirectReferral', ['filter' => '
 $routes->get('/IndirectReferral','loginController::IndirectReferral', ['filter' => 'auth']);
 $routes->get('/listlevelcount','loginController::listlevelcount', ['filter' => 'auth']);
 $routes->post('/sign-up','loginController::signup', ['filter' => 'noauth']);
+$routes->get('/getCommision','loginController::getCommision', ['filter' => 'auth']);
+$routes->get('/levelwisecommision','loginController::levelwisecommision', ['filter' => 'auth']);
 
 /*
  * --------------------------------------------------------------------

@@ -58,28 +58,28 @@ class loginController extends BaseController
         $pancard = $this->request->getVar()['pancard'];
         $email = $this->request->getVar()['email'];
         $password = md5($this->request->getVar()['password']);
-        $isValid=[
-            'fname'=>'required',
-            'lname'=>'required',
-            'referedby'=>'required|exact_length[10]|is_not_unique[userlogin.referralid]',
-            'pancard'=>'required|exact_length[10]',
-            'email'=>'required|valid_email|is_unique[userlogin.email]',
-            'password'=>'required'
+        $isValid = [
+            'fname' => 'required',
+            'lname' => 'required',
+            'referedby' => 'required|exact_length[10]|is_not_unique[userlogin.referralid]',
+            'pancard' => 'required|exact_length[10]',
+            'email' => 'required|valid_email|is_unique[userlogin.email]',
+            'password' => 'required'
         ];
-        if($this->validate($isValid)){
-            $referedby=$userModel->where('referralid',$referedby)->find();
-            $refereddby=$referedby[0]['id'];
+        if ($this->validate($isValid)) {
+            $referedby = $userModel->where('referralid', $referedby)->find();
+            $refereddby = $referedby[0]['id'];
             echo $refereddby;
             // exit;
-            $referralid= "DARW". rand(100000,999999);
+            $referralid = "DARW" . rand(100000, 999999);
             $data = [
-                "f_name"=>$fname,
-                "l_name"=>$lname,
-                'referedby'=>$refereddby,
+                "f_name" => $fname,
+                "l_name" => $lname,
+                'referedby' => $refereddby,
                 "pancard" => $pancard,
                 "email" => $email,
                 "password" => $password,
-                'referralid'=>$referralid
+                'referralid' => $referralid
             ];
             if ($userModel->insert($data)) {
                 $session->setFlashdata("success", "<strong>Successfully Registered!</strong> Please Login to authenticate.");
@@ -88,7 +88,7 @@ class loginController extends BaseController
                 $session->setFlashdata("error", "Registration Failed");
                 return redirect()->to('/login');
             }
-        }else{
+        } else {
             return redirect()->back()->withInput();
         }
     }
@@ -159,7 +159,7 @@ class loginController extends BaseController
         foreach ($result as $row) {
             // print_r($row);
             // echo "<br>";
-            $output .= '<li><div><b>' . $row['id'] . ' </b></div>       ';
+            $output .= '<li><div class="content"><b>' . $row['id'] . ' </b></div>       ';
             $output .= $userController->generateTree($row['id']);
             $output .= '</li>';
             // $this->i++;
@@ -184,6 +184,8 @@ class loginController extends BaseController
         if ($this->session->get('user_id')) {
             $id = $this->session->get('user_id');
             $loginController = new loginController();
+            // echo  number_format($loginController->getCommision(12200), 2);
+            // exit;
             $hierarchy = $loginController->generateTree($id);
 
             return view('ReferralHierarchy', ['hierarchy' => $hierarchy, 'id' => $this->session->get('username')]);
@@ -239,5 +241,83 @@ class loginController extends BaseController
           GROUP BY level;")->getResultArray();
 
         return view("listlevelcount", ['level' => $result]);
+    }
+
+    function levelwisecommision(){
+        $id= $this->session->get('user_id');
+        $loginController= new loginController();
+        $firstDirect= $loginController->getCommisionfor1stLevel();
+        return view('levelwisecommision',['firstDirect'=>$firstDirect]);
+
+    }
+
+
+    function getCommisionfor1stLevel(){
+        $id = $this->session->get('user_id');
+        $result = $this->db->query("WITH RECURSIVE referrals AS (
+            SELECT id, referedby, 1 as level 
+            FROM userlogin 
+            WHERE id = $id
+            UNION ALL 
+            SELECT u.id, u.referedby, r.level + 1 as level 
+            FROM userlogin u 
+            INNER JOIN referrals r ON u.referedby = r.id 
+          ) 
+          SELECT (level-1), COUNT(*) AS node_count 
+          FROM referrals WHERE (level-1)>0
+          GROUP BY level;")->getResultArray();
+            if(count($result)>0){
+                $amount= 12200;
+                $amount = ($amount * 2) / 730;
+                if($result[0]['(level-1)']==1){
+
+                    $commision=number_format(($amount * $result[0]['node_count']), 2);
+                    if($commision>500){
+                        $commision=500;
+                    }
+                    return ['totalreferral'=>$result[0]['node_count'],'commision'=>$commision]; 
+                }else{
+                    return 0;
+                }
+
+            }else{
+                return 0;
+            }
+
+    }
+
+    function getCommision()
+    {
+        $loginController= new loginController();
+        echo $loginController->getCommisionfor1stLevel();
+        exit;
+        $id = $this->session->get("user_id");
+        $result = $this->db->query("WITH RECURSIVE referrals AS (
+            SELECT id, referedby, 1 as level 
+            FROM userlogin 
+            WHERE id = $id
+            UNION ALL 
+            SELECT u.id, u.referedby, r.level + 1 as level 
+            FROM userlogin u 
+            INNER JOIN referrals r ON u.referedby = r.id 
+          ) 
+          SELECT (level-1), COUNT(*) AS node_count 
+          FROM referrals WHERE (level-1)>0
+          GROUP BY level;")->getResultArray();
+          echo "<pre>";
+          if(count($result)>0){
+            foreach($result as $level){
+                echo "<pre>";
+                if($level['(level-1)']==1){
+                   echo  $level['node_count'];
+                    echo "hello";
+                }
+                print_r($level);
+            }
+          }
+    // print_r($result);
+        // exit;
+        // $totalamount = ($totalamount * 2) / 730;
+        // return $totalamount;
     }
 }

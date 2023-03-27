@@ -354,6 +354,24 @@
             height: 24px;
             top: 0;
         }
+        
+        .content  {
+    background-color: #fff;
+    
+    -webkit-transition: background-color 1000ms linear;
+    -moz-transition: background-color 1000ms linear;
+    -o-transition: background-color 1000ms linear;
+    -ms-transition: background-color 1000ms linear;
+    transition: background-color 1000ms linear;
+}
+
+.content:hover {
+    background-color: #EBB02D;
+    cursor: not-allowed;
+
+}
+
+
     </style>
     <!-- Required meta tags -->
     <meta charset="utf-8">
