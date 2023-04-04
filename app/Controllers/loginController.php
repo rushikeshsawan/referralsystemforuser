@@ -159,7 +159,7 @@ class loginController extends BaseController
         foreach ($result as $row) {
             // print_r($row);
             // echo "<br>";
-            $output .= '<li><div class="content"><b>' . $row['id'] . ' </b></div>       ';
+            $output .= '<li><div class="content"><b>' . $row['f_name'] . ' </b></div>       ';
             $output .= $userController->generateTree($row['id']);
             $output .= '</li>';
             // $this->i++;
@@ -243,16 +243,17 @@ class loginController extends BaseController
         return view("listlevelcount", ['level' => $result]);
     }
 
-    function levelwisecommision(){
-        $id= $this->session->get('user_id');
-        $loginController= new loginController();
-        $firstDirect= $loginController->getCommisionfor1stLevel();
-        return view('levelwisecommision',['firstDirect'=>$firstDirect]);
-
+    function levelwisecommision()
+    {
+        $id = $this->session->get('user_id');
+        $loginController = new loginController();
+        $firstDirect = $loginController->getCommisionfor1stLevel();
+        return view('levelwisecommision', ['firstDirect' => $firstDirect]);
     }
 
 
-    function getCommisionfor1stLevel(){
+    function getCommisionfor1stLevel()
+    {
         $id = $this->session->get('user_id');
         $result = $this->db->query("WITH RECURSIVE referrals AS (
             SELECT id, referedby, 1 as level 
@@ -266,29 +267,74 @@ class loginController extends BaseController
           SELECT (level-1), COUNT(*) AS node_count 
           FROM referrals WHERE (level-1)>0
           GROUP BY level;")->getResultArray();
-            if(count($result)>0){
-                $amount= 12200;
-                $amount = ($amount * 2) / 730;
-                if($result[0]['(level-1)']==1){
+        $levelcommision = [];
+        if (count($result) > 0) {
+            $amount = 12200;
+            $amount = ($amount * 2) / 730;
+           
+            if ($result[0]['(level-1)'] == 1) {
 
-                    $commision=number_format(($amount * $result[0]['node_count']), 2);
-                    if($commision>500){
-                        $commision=500;
-                    }
-                    return ['totalreferral'=>$result[0]['node_count'],'commision'=>$commision]; 
-                }else{
-                    return 0;
+                $commision = number_format(($amount * $result[0]['node_count']), 2);
+                if ($commision > 500) {
+                    $commision = 500;
                 }
+                $levelcommision[0] = ['totalreferral' => $result[0]['node_count'], 'commision' => $commision,'level'=>1];
+                // return ['totalreferral'=>$result[0]['node_count'],'commision'=>$commision]; 
+            } else {
+                $levelcommision[0] = ['totalreferral' => 0, 'commision' => 0,'level'=>1];
 
-            }else{
-                return 0;
+                // return 0;
             }
 
+
+            if ($result[1]['(level-1)'] == 2) {
+                $commision = number_format(($amount * $result[1]['node_count']), 2);
+                if ($commision > 500) {
+                    $commision = 500;
+                }
+                $levelcommision[1] = ['totalreferral' => $result[1]['node_count'], 'commision' => $commision,'level'=>2];
+
+                // return ['totalreferral' => $result[0]['node_count'], 'commision' => $commision];
+            }else {
+                $levelcommision[1] = ['totalreferral' => 0, 'commision' => 0,'level'=>2];
+    
+                // return 0;
+            }
+
+            if ($result[2]['(level-1)'] == 3) {
+                $commision = number_format(($amount * $result[2]['node_count']), 2);
+                if ($commision > 500) {
+                    $commision = 500;
+                }
+                $levelcommision[2] = ['totalreferral' => $result[2]['node_count'], 'commision' => $commision,'level'=>3];
+
+                // return ['totalreferral' => $result[0]['node_count'], 'commision' => $commision];
+            }else {
+                $levelcommision[2] = ['totalreferral' => 0, 'commision' => 0,'level'=>3];
+    
+                // return 0;
+            }
+
+            // echo "<pre>";
+            // print_r($levelcommision);
+            // exit;
+            return $levelcommision;
+
+
+
+
+
+
+        } else {
+            // $levelcommision[1] = ['totalreferral' => 0, 'commision' => 0];
+
+            return 0;
+        }
     }
 
     function getCommision()
     {
-        $loginController= new loginController();
+        $loginController = new loginController();
         echo $loginController->getCommisionfor1stLevel();
         // exit;
         $id = $this->session->get("user_id");
@@ -304,20 +350,20 @@ class loginController extends BaseController
           SELECT (level-1), COUNT(*) AS node_count 
           FROM referrals WHERE (level-1)>0
           GROUP BY level;")->getResultArray();
-          echo "<pre>";
-          if(count($result)>0){
-            foreach($result as $level){
+        echo "<pre>";
+        if (count($result) > 0) {
+            foreach ($result as $level) {
                 echo "<pre>";
-                if($level['(level-1)']==1){
-                   echo  $level['node_count'];
+                if ($level['(level-1)'] == 1) {
+                    echo  $level['node_count'];
                     echo "hello";
                 }
                 print_r($level);
             }
-          }
-    // print_r($result);
-        // exit;
-        // $totalamount = ($totalamount * 2) / 730;
-        // return $totalamount;
+        }
+        // print_r($result);
+        //     exit;
+        //     $totalamount = ($totalamount * 2) / 730;
+        //     return $totalamount;
     }
 }

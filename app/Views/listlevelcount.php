@@ -373,7 +373,7 @@
    
     ?>
 <div class="container m-5 row col-6">
-     <h1> List of all Your Level Referral</h1><hr><br>
+     <h1> List of all Your Referral Level</h1><hr><br>
 <table class="table mt-5 pt-5 table-hover">
   <thead>
     <tr>

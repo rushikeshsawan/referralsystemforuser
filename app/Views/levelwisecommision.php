@@ -25,7 +25,7 @@
 
     <?php
     include "Partials/Navbar.php";
-    $totalcommision=0;
+    $totalcommision = 0;
     ?>
     <div class="container m-5 row col-6">
         <h1> Level Wise Commision </h1>
@@ -40,25 +40,34 @@
             </thead>
             <tbody>
                 <?php
-                if (isset($firstDirect)) {
+                if (isset($firstDirect) && $firstDirect !=0) {
+                    // print_r($firstDirect);
+                    // exit;
                 ?>
-                    <tr>
-                        <td>1</td>
-                        <td><?= $firstDirect['totalreferral'] ?></td>
-                        <td>&#8377; <?= $firstDirect['commision'] ?></td>
-                        <?php $totalcommision += $firstDirect['commision']; ?>
-                    </tr>
+                    <?php
+                    foreach ($firstDirect as $commision) {
+                        // print_r($commision);exit;
+                    ?>
+
+                        <tr>
+                            <td><?= $commision['level'] ?></td>
+                            <td><?= $commision['totalreferral'] ?></td>
+                            <td>&#8377; <?= $commision['commision'] ?></td>
+                            <?php $totalcommision += $commision['commision']; ?>
+                        </tr>
+
                 <?php
+                    }
                 }
                 ?>
 
-<tr>
-                        <td colspan="2" class="text-danger offset-1"><b>Total Daily Commision</b></td>
-                        <td colspan="1" class="text-danger"><b> &#8377; <?= $totalcommision ?></b></td>
-                       
-                    </tr>
+                <tr>
+                    <td colspan="2" class="text-danger offset-1"><b>Total Daily Commision</b></td>
+                    <td colspan="1" class="text-danger"><b> &#8377; <?= $totalcommision ?></b></td>
 
-             
+                </tr>
+
+
 
             </tbody>
         </table>

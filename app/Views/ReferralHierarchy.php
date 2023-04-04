@@ -391,16 +391,20 @@
         // echo $hierarchy;
         // include "Partials/cards.php";
 
-        ?><div class="border border-warning border-5 mt-5">
+        ?>
+        <div class="mt-5">
 
-        <h5 class="modal-title  text-center fw-bold" id="exampleModalLongTitle">Hierarchy View For ID- <?= (isset($id)) ? ($id) : ("no id"); ?></h5>
+            <div class="border border-warning border-5 mt-5">
+                
+                <h5 class="modal-title  text-center fw-bold" id="exampleModalLongTitle">Hierarchy View For User- <?= (isset($id)) ? ($id) : ("no id"); ?></h5>
          <?php
                     if (isset($hierarchy)) {
                         echo  $hierarchy;
                     }
-
+                    
                     ?>
         </div>
+    </div>
     
 
 
