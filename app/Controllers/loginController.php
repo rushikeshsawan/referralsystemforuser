@@ -271,17 +271,17 @@ class loginController extends BaseController
         if (count($result) > 0) {
             $amount = 12200;
             $amount = ($amount * 2) / 730;
-           
+
             if ($result[0]['(level-1)'] == 1) {
 
                 $commision = number_format(($amount * $result[0]['node_count']), 2);
                 if ($commision > 500) {
                     $commision = 500;
                 }
-                $levelcommision[0] = ['totalreferral' => $result[0]['node_count'], 'commision' => $commision,'level'=>1];
+                $levelcommision[0] = ['totalreferral' => $result[0]['node_count'], 'commision' => $commision, 'level' => 1];
                 // return ['totalreferral'=>$result[0]['node_count'],'commision'=>$commision]; 
             } else {
-                $levelcommision[0] = ['totalreferral' => 0, 'commision' => 0,'level'=>1];
+                $levelcommision[0] = ['totalreferral' => 0, 'commision' => 0, 'level' => 1];
 
                 // return 0;
             }
@@ -292,12 +292,12 @@ class loginController extends BaseController
                 if ($commision > 500) {
                     $commision = 500;
                 }
-                $levelcommision[1] = ['totalreferral' => $result[1]['node_count'], 'commision' => $commision,'level'=>2];
+                $levelcommision[1] = ['totalreferral' => $result[1]['node_count'], 'commision' => $commision, 'level' => 2];
 
                 // return ['totalreferral' => $result[0]['node_count'], 'commision' => $commision];
-            }else {
-                $levelcommision[1] = ['totalreferral' => 0, 'commision' => 0,'level'=>2];
-    
+            } else {
+                $levelcommision[1] = ['totalreferral' => 0, 'commision' => 0, 'level' => 2];
+
                 // return 0;
             }
 
@@ -306,12 +306,12 @@ class loginController extends BaseController
                 if ($commision > 500) {
                     $commision = 500;
                 }
-                $levelcommision[2] = ['totalreferral' => $result[2]['node_count'], 'commision' => $commision,'level'=>3];
+                $levelcommision[2] = ['totalreferral' => $result[2]['node_count'], 'commision' => $commision, 'level' => 3];
 
                 // return ['totalreferral' => $result[0]['node_count'], 'commision' => $commision];
-            }else {
-                $levelcommision[2] = ['totalreferral' => 0, 'commision' => 0,'level'=>3];
-    
+            } else {
+                $levelcommision[2] = ['totalreferral' => 0, 'commision' => 0, 'level' => 3];
+
                 // return 0;
             }
 
@@ -319,12 +319,6 @@ class loginController extends BaseController
             // print_r($levelcommision);
             // exit;
             return $levelcommision;
-
-
-
-
-
-
         } else {
             // $levelcommision[1] = ['totalreferral' => 0, 'commision' => 0];
 
